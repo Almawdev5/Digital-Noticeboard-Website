@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Item Detail — Lost & Found</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    .detail-page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    .detail-img {
+      width: 100%; height: 320px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      background: var(--gray-100);
+      display: flex; align-items: center;
+      justify-content: center; font-size: 5rem;
+      overflow: hidden;
+    }
+    .detail-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .detail-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    .detail-card__top {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .detail-card h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .detail-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.25rem 0;
+    }
+    .detail-meta__label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .detail-meta__value {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .detail-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .owner-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.75rem;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .owner-card__info {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .owner-card__name { font-weight: 500; font-size: 0.95rem; }
+    .owner-card__sub  { font-size: 0.78rem; color: var(--text-muted); }
+    .report-btn {
+      background: none; border: none;
+      color: var(--text-muted); font-size: 0.78rem;
+      cursor: pointer; font-family: var(--font);
+      text-decoration: underline;
+    }
+    .report-btn:hover { color: var(--coral-400); }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="dashboard.html" class="navbar__logo">
+      <div class="navbar__logo-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <circle cx="9" cy="7" r="3" stroke="white" stroke-width="1.5"/>
+          <path d="M9 11C5.7 11 3.5 12.8 3.5 15h11C14.5 12.8 12.3 11 9 11z" fill="white" opacity=".85"/>
+        </svg>
+      </div>
+      Lost &amp; Found
+    </a>
+    <div class="navbar__links">
+      <a href="dashboard.html" class="btn btn--ghost btn--sm">← Back</a>
+    </div>
+  </div>
+</nav>
+
+<div class="detail-page">
+
+  <!-- Image -->
+  <div class="detail-img" id="detail-img">⏳</div>
+
+  <!-- Main card -->
+  <div class="detail-card">
+    <div class="detail-card__top">
+      <span class="badge" id="detail-badge">—</span>
+      <span style="font-size:0.78rem;color:var(--text-muted);" id="detail-date">—</span>
+    </div>
+    <h1 id="detail-title">Loading...</h1>
+    <div class="detail-meta">
+      <div class="detail-meta__item">
+        <div class="detail-meta__label">Category</div>
+        <div class="detail-meta__value" id="detail-category">—</div>
+      </div>
+      <div class="detail-meta__item">
+        <div class="detail-meta__label">Last seen location</div>
+        <div class="detail-meta__value" id="detail-location">—</div>
+      </div>
+    </div>
+    <div class="detail-desc" id="detail-desc">—</div>
+  </div>
+
+  <!-- Owner card -->
+  <div class="owner-card">
+    <div class="owner-card__info">
+      <div class="avatar avatar--md" id="owner-avatar">—</div>
+      <div>
+        <div class="owner-card__name" id="owner-name">—</div>
+        <div class="owner-card__sub" id="owner-verified">Community member</div>
+      </div>
+    </div>
+    <button class="btn btn--primary" id="message-btn">
+      💬 Message
+    </button>
+  </div>
+
+  <!-- Report -->
+  <div style="text-align:center;">
+    <button class="report-btn" id="report-btn">🚩 Report this listing</button>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  redirectIfNotAuthed();
+
+  const emojis = {
+    'ID / Documents': '🪪', 'Electronics': '📱',
+    'Clothing': '👕',       'Accessories': '👜',
+    'Keys': '🔑',           'Pet': '🐕', 'Other': '📦'
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const id     = params.get('id');
+  if (!id) window.location.href = 'dashboard.html';
+
+  // ── Load listing ──
+  async function loadListing() {
+    const { data, error } = await sb
+      .from('listings')
+      .select('*, profiles(id, full_name, verified)')
+      .eq('id', id)
+      .single();
+
+    if (error || !data) {
+      showToast('Listing not found', 'error');
+      setTimeout(() => window.location.href = 'dashboard.html', 1500);
+      return;
+    }
+
+    // Image
+    const imgBox = document.getElementById('detail-img');
+    if (data.photo_url) {
+      imgBox.innerHTML = `<img src="${data.photo_url}" alt="${data.title}"/>`;
+    } else {
+      imgBox.textContent = emojis[data.category] || '📦';
+    }
+
+    // Badge
+    const badge = document.getElementById('detail-badge');
+    badge.textContent = data.type === 'lost' ? 'Lost' : 'Found';
+    badge.className   = `badge badge--${data.type}`;
+
+    // Details
+    document.getElementById('detail-date').textContent     = timeAgo(data.created_at);
+    document.getElementById('detail-title').textContent    = data.title;
+    document.getElementById('detail-category').textContent = data.category;
+    document.getElementById('detail-location').textContent = data.location;
+    document.getElementById('detail-desc').textContent     = data.description || 'No description provided.';
+
+    // Owner
+    const owner = data.profiles;
+    document.getElementById('owner-avatar').textContent   = initials(owner?.full_name || 'U');
+    document.getElementById('owner-name').textContent     = owner?.full_name || 'Unknown';
+    document.getElementById('owner-verified').textContent = owner?.verified
+      ? '✅ Verified member' : 'Community member';
+
+    // Message button
+    document.getElementById('message-btn').addEventListener('click', () => {
+      window.location.href = `chat.html?listing=${id}&user=${owner?.id}`;
+    });
+  }
+
+  // ── Report listing ──
+  document.getElementById('report-btn').addEventListener('click', async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    const { error } = await sb.from('reports').insert({
+      listing_id:  id,
+      reporter_id: session.user.id,
+      reason:      'Reported by user'
+    });
+    if (error) { showToast('Could not report listing', 'error'); return; }
+    showToast('Listing reported to admins', 'success');
+  });
+
+  loadListing();
+</script>
+
+</body>
+</html>

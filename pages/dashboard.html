@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Lost & Found</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    .dashboard-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+      margin-bottom: 2rem;
+    }
+    .dashboard-header__inner {
+      max-width: 1080px; margin: 0 auto; padding: 0 1.25rem;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .dashboard-header h1 { font-size: 1.4rem; }
+    .dashboard-header p  { font-size: 0.85rem; color: var(--text-muted); }
+
+    .filters {
+      display: flex; align-items: center;
+      gap: 8px; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .filter-btn {
+      border: 1px solid var(--border-md);
+      background: #fff; color: var(--text-secondary);
+      border-radius: 20px; padding: 6px 16px;
+      font-size: 0.82rem; cursor: pointer;
+      font-family: var(--font); transition: all 0.15s;
+    }
+    .filter-btn.active {
+      background: var(--green-400);
+      border-color: var(--green-400);
+      color: #fff;
+    }
+    .filter-btn.active.lost {
+      background: var(--coral-400);
+      border-color: var(--coral-400);
+    }
+    .search-input {
+      flex: 1; min-width: 200px;
+      padding: 7px 14px;
+      border: 1px solid var(--border-md);
+      border-radius: 20px; font-size: 0.85rem;
+      font-family: var(--font); outline: none;
+      background: #fff; color: var(--text-primary);
+    }
+    .search-input:focus { border-color: var(--green-400); }
+
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .listing-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden; cursor: pointer;
+      transition: box-shadow 0.15s, transform 0.15s;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .listing-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .listing-card__img {
+      width: 100%; height: 160px;
+      object-fit: cover;
+      display: flex; align-items: center;
+      justify-content: center; font-size: 3rem;
+    }
+    .listing-card__img.lost-bg  { background: var(--coral-50); }
+    .listing-card__img.found-bg { background: var(--green-50); }
+    .listing-card__body { padding: 12px 14px; }
+    .listing-card__top {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 6px;
+    }
+    .listing-card__title {
+      font-size: 0.95rem; font-weight: 500;
+      margin-bottom: 4px; color: var(--text-primary);
+    }
+    .listing-card__loc {
+      font-size: 0.78rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 4px;
+      margin-bottom: 8px;
+    }
+    .listing-card__footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .listing-card__user {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: var(--text-secondary);
+    }
+    .skeleton {
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+    .skeleton-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .skeleton-img  { height: 160px; }
+    .skeleton-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .skeleton-line { height: 14px; border-radius: 4px; }
+    .skeleton-line.short { width: 60%; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="../index.html" class="navbar__logo">
+      <div class="navbar__logo-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <circle cx="9" cy="7" r="3" stroke="white" stroke-width="1.5"/>
+          <path d="M9 11C5.7 11 3.5 12.8 3.5 15h11C14.5 12.8 12.3 11 9 11z" fill="white" opacity=".85"/>
+        </svg>
+      </div>
+      Lost &amp; Found
+    </a>
+    <div class="navbar__links">
+      <a href="post-item.html" class="btn btn--primary btn--sm">+ Post item</a>
+      <a href="admin.html" class="btn btn--ghost btn--sm" id="admin-link" style="display:none;">🛡️ Admin</a>
+      <button class="btn btn--ghost btn--sm" id="logout-btn">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+  <div class="dashboard-header__inner">
+    <div>
+      <h1>Community listings</h1>
+      <p>Browse lost and found items in your area</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <div style="text-align:center;">
+        <div style="font-size:1.3rem;font-weight:600;color:var(--coral-400);" id="count-lost">—</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Lost</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:1.3rem;font-weight:600;color:var(--green-400);" id="count-found">—</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Found</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container page">
+
+  <!-- Filters -->
+  <div class="filters">
+    <input class="search-input" type="text" placeholder="Search items or location..." id="search"/>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn lost"   data-filter="lost">Lost</button>
+    <button class="filter-btn"        data-filter="found">Found</button>
+  </div>
+
+  <!-- Grid -->
+  <div class="listings-grid" id="listings-grid"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/utils.js"></script>
+<script>
+  redirectIfNotAuthed();
+
+  const grid    = document.getElementById('listings-grid');
+  const search  = document.getElementById('search');
+  let allItems  = [];
+  let curFilter = 'all';
+
+  // ── Show skeleton loaders ──
+  function showSkeletons() {
+    grid.innerHTML = Array(6).fill(`
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line short"></div>
+          <div class="skeleton skeleton-line short"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── Check if user is admin ──
+  async function checkAdminLink() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const { data } = await sb
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', session.user.id)
+      .single();
+    if (data?.is_admin) {
+      document.getElementById('admin-link').style.display = 'inline-flex';
+    }
+  }
+
+  // ── Load listings from Supabase ──
+  async function loadListings() {
+    showSkeletons();
+    const { data, error } = await sb
+      .from('listings')
+      .select('*, profiles(full_name, verified)')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false });
+
+    if (error) { showToast('Failed to load listings', 'error'); return; }
+
+    allItems = data || [];
+    updateCounts();
+    renderListings();
+  }
+
+  // ── Count lost vs found ──
+  function updateCounts() {
+    document.getElementById('count-lost').textContent  = allItems.filter(i => i.type === 'lost').length;
+    document.getElementById('count-found').textContent = allItems.filter(i => i.type === 'found').length;
+  }
+
+  // ── Render cards ──
+  function renderListings() {
+    const q = search.value.toLowerCase();
+    const filtered = allItems.filter(item => {
+      if (curFilter !== 'all' && item.type !== curFilter) return false;
+      if (q && !item.title.toLowerCase().includes(q) && !item.location.toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="empty" style="grid-column:1/-1">
+          <div class="empty__icon">🔍</div>
+          <p>No listings found. Try a different search.</p>
+        </div>`;
+      return;
+    }
+
+    const emojis = {
+      'ID / Documents': '🪪', 'Electronics': '📱',
+      'Clothing': '👕', 'Accessories': '👜',
+      'Keys': '🔑', 'Pet': '🐕', 'Other': '📦'
+    };
+
+    grid.innerHTML = filtered.map(item => `
+      <a class="listing-card" href="item-detail.html?id=${item.id}">
+        <div class="listing-card__img ${item.type}-bg">
+          ${item.photo_url
+            ? `<img src="${item.photo_url}" style="width:100%;height:100%;object-fit:cover;"/>`
+            : emojis[item.category] || '📦'}
+        </div>
+        <div class="listing-card__body">
+          <div class="listing-card__top">
+            <span class="badge badge--${item.type}">${item.type === 'lost' ? 'Lost' : 'Found'}</span>
+            <span style="font-size:0.75rem;color:var(--text-muted);">${timeAgo(item.created_at)}</span>
+          </div>
+          <div class="listing-card__title">${item.title}</div>
+          <div class="listing-card__loc">
+            📍 ${item.location}
+          </div>
+          <div class="listing-card__footer">
+            <div class="listing-card__user">
+              <div class="avatar avatar--sm">${initials(item.profiles?.full_name || 'U')}</div>
+              ${item.profiles?.full_name || 'Unknown'}
+            </div>
+            ${item.profiles?.verified
+              ? '<span class="badge badge--verified">✓ Verified</span>'
+              : ''}
+          </div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  // ── Filter buttons ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      curFilter = btn.dataset.filter;
+      renderListings();
+    });
+  });
+
+  // ── Search ──
+  search.addEventListener('input', renderListings);
+
+  // ── Logout ──
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    window.location.href = '../index.html';
+  });
+
+  // ── Init ──
+  checkAdminLink();
+  loadListings();
+</script>
+
+</body>
+</html>
