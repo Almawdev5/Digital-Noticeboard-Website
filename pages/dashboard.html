@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="../css/main.css"/>
   <style>
     .dashboard-header {
-      background: #fff;
+      background: var(--bg-secondary);
       border-bottom: 1px solid var(--border);
       padding: 1.5rem 0;
       margin-bottom: 2rem;
@@ -27,7 +27,8 @@
     }
     .filter-btn {
       border: 1px solid var(--border-md);
-      background: #fff; color: var(--text-secondary);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
       border-radius: 20px; padding: 6px 16px;
       font-size: 0.82rem; cursor: pointer;
       font-family: var(--font); transition: all 0.15s;
@@ -47,7 +48,8 @@
       border: 1px solid var(--border-md);
       border-radius: 20px; font-size: 0.85rem;
       font-family: var(--font); outline: none;
-      background: #fff; color: var(--text-primary);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
     }
     .search-input:focus { border-color: var(--green-400); }
 
@@ -57,7 +59,7 @@
       gap: 1rem;
     }
     .listing-card {
-      background: #fff;
+      background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       overflow: hidden; cursor: pointer;
@@ -102,7 +104,7 @@
       font-size: 0.78rem; color: var(--text-secondary);
     }
     .skeleton {
-      background: var(--gray-100);
+      background: var(--bg-tertiary);
       border-radius: var(--radius-md);
       animation: pulse 1.5s infinite;
     }
@@ -111,7 +113,8 @@
       50%       { opacity: 0.5; }
     }
     .skeleton-card {
-      background: #fff; border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg); overflow: hidden;
     }
     .skeleton-img  { height: 160px; }
@@ -136,7 +139,13 @@
     </a>
     <div class="navbar__links">
       <a href="post-item.html" class="btn btn--primary btn--sm">+ Post item</a>
+      <a href="inbox.html" class="notif-btn" id="inbox-btn" title="Messages">
+        💬
+        <span class="notif-badge" id="notif-badge"></span>
+      </a>
+      <a href="profile.html" class="notif-btn" title="Profile">👤</a>
       <a href="admin.html" class="btn btn--ghost btn--sm" id="admin-link" style="display:none;">🛡️ Admin</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">🌙</button>
       <button class="btn btn--ghost btn--sm" id="logout-btn">Sign out</button>
     </div>
   </div>
@@ -183,23 +192,27 @@
 <script src="../js/utils.js"></script>
 <script>
   redirectIfNotAuthed();
+  initTheme();
 
   const grid    = document.getElementById('listings-grid');
   const search  = document.getElementById('search');
   let allItems  = [];
   let curFilter = 'all';
 
-  // ── Show skeleton loaders ──
-  function showSkeletons() {
-    grid.innerHTML = Array(6).fill(`
-      <div class="skeleton-card">
-        <div class="skeleton skeleton-img"></div>
-        <div class="skeleton-body">
-          <div class="skeleton skeleton-line"></div>
-          <div class="skeleton skeleton-line short"></div>
-          <div class="skeleton skeleton-line short"></div>
-        </div>
-      </div>`).join('');
+  // ── Check unread messages ──
+  async function checkUnread() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const { count } = await sb
+      .from('messages')
+      .select('id', { count: 'exact' })
+      .eq('receiver_id', session.user.id)
+      .eq('read', false);
+    if (count > 0) {
+      const badge = document.getElementById('notif-badge');
+      badge.textContent = count;
+      badge.style.display = 'flex';
+    }
   }
 
   // ── Check if user is admin ──
@@ -214,6 +227,19 @@
     if (data?.is_admin) {
       document.getElementById('admin-link').style.display = 'inline-flex';
     }
+  }
+
+  // ── Show skeleton loaders ──
+  function showSkeletons() {
+    grid.innerHTML = Array(6).fill(`
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-img"></div>
+        <div class="skeleton-body">
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line short"></div>
+          <div class="skeleton skeleton-line short"></div>
+        </div>
+      </div>`).join('');
   }
 
   // ── Load listings from Supabase ──
@@ -313,6 +339,7 @@
 
   // ── Init ──
   checkAdminLink();
+  checkUnread();
   loadListings();
 </script>
 
