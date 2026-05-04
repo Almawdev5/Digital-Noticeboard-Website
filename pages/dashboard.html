@@ -121,6 +121,24 @@
     .skeleton-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
     .skeleton-line { height: 14px; border-radius: 4px; }
     .skeleton-line.short { width: 60%; }
+
+    .nav-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex; align-items: center;
+      justify-content: center;
+      background: var(--green-50);
+      color: var(--green-600);
+      font-size: 0.72rem; font-weight: 600;
+      border: 1.5px solid var(--border-md);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .nav-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -143,7 +161,7 @@
         💬
         <span class="notif-badge" id="notif-badge"></span>
       </a>
-      <a href="profile.html" class="notif-btn" title="Profile">👤</a>
+      <a href="profile.html" class="nav-avatar" id="nav-avatar" title="Profile">👤</a>
       <a href="admin.html" class="btn btn--ghost btn--sm" id="admin-link" style="display:none;">🛡️ Admin</a>
       <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">🌙</button>
       <button class="btn btn--ghost btn--sm" id="logout-btn">Sign out</button>
@@ -198,6 +216,24 @@
   const search  = document.getElementById('search');
   let allItems  = [];
   let curFilter = 'all';
+
+  // ── Load nav avatar ──
+  async function loadNavAvatar() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const { data } = await sb
+      .from('profiles')
+      .select('avatar_url, full_name')
+      .eq('id', session.user.id)
+      .single();
+
+    const el = document.getElementById('nav-avatar');
+    if (data?.avatar_url) {
+      el.innerHTML = `<img src="${data.avatar_url}" alt="avatar"/>`;
+    } else {
+      el.textContent = initials(data?.full_name || '?');
+    }
+  }
 
   // ── Check unread messages ──
   async function checkUnread() {
@@ -340,6 +376,7 @@
   // ── Init ──
   checkAdminLink();
   checkUnread();
+  loadNavAvatar();
   loadListings();
 </script>
 
