@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard — Lost & Found</title>
+  <title>Dashboard — ReFind Digital Noticeboard</title>
   <link rel="stylesheet" href="../css/main.css"/>
   <style>
     .dashboard-header {
@@ -34,8 +34,8 @@
       font-family: var(--font); transition: all 0.15s;
     }
     .filter-btn.active {
-      background: var(--green-400);
-      border-color: var(--green-400);
+      background: var(--brand-400);
+      border-color: var(--brand-400);
       color: #fff;
     }
     .filter-btn.active.lost {
@@ -51,7 +51,7 @@
       background: var(--bg-secondary);
       color: var(--text-primary);
     }
-    .search-input:focus { border-color: var(--green-400); }
+    .search-input:focus { border-color: var(--brand-400); }
 
     .listings-grid {
       display: grid;
@@ -78,7 +78,7 @@
       justify-content: center; font-size: 3rem;
     }
     .listing-card__img.lost-bg  { background: var(--coral-50); }
-    .listing-card__img.found-bg { background: var(--green-50); }
+    .listing-card__img.found-bg { background: var(--brand-50); }
     .listing-card__body { padding: 12px 14px; }
     .listing-card__top {
       display: flex; align-items: center;
@@ -124,21 +124,14 @@
 
     .nav-avatar {
       width: 30px; height: 30px;
-      border-radius: 50%;
-      overflow: hidden;
-      display: flex; align-items: center;
-      justify-content: center;
-      background: var(--green-50);
-      color: var(--green-600);
+      border-radius: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--brand-50); color: var(--brand-400);
       font-size: 0.72rem; font-weight: 600;
       border: 1.5px solid var(--border-md);
-      text-decoration: none;
-      flex-shrink: 0;
+      text-decoration: none; flex-shrink: 0;
     }
-    .nav-avatar img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
+    .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
   </style>
 </head>
 <body>
@@ -147,13 +140,18 @@
 <nav class="navbar">
   <div class="navbar__inner">
     <a href="../index.html" class="navbar__logo">
-      <div class="navbar__logo-icon">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <circle cx="9" cy="7" r="3" stroke="white" stroke-width="1.5"/>
-          <path d="M9 11C5.7 11 3.5 12.8 3.5 15h11C14.5 12.8 12.3 11 9 11z" fill="white" opacity=".85"/>
-        </svg>
+      <div class="navbar__logo-pill">
+        <div class="navbar__logo-icon">
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+            <circle cx="8" cy="7" r="4" fill="none" stroke="#4B0082" stroke-width="2"/>
+            <line x1="11.5" y1="11" x2="15" y2="15" stroke="#4B0082" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6 5 Q8 3 10 5" fill="none" stroke="#4B0082" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M9.5 4 L11 5.5 L9 6.5" fill="none" stroke="#4B0082" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="navbar__logo-text"><span>Re</span>Find</span>
       </div>
-      Lost &amp; Found
+      <span class="navbar__logo-sub hide-mobile">Digital Noticeboard</span>
     </a>
     <div class="navbar__links">
       <a href="post-item.html" class="btn btn--primary btn--sm">+ Post item</a>
@@ -182,7 +180,7 @@
         <div style="font-size:0.75rem;color:var(--text-muted);">Lost</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-size:1.3rem;font-weight:600;color:var(--green-400);" id="count-found">—</div>
+        <div style="font-size:1.3rem;font-weight:600;color:var(--brand-400);" id="count-found">—</div>
         <div style="font-size:0.75rem;color:var(--text-muted);">Found</div>
       </div>
     </div>
@@ -226,7 +224,6 @@
       .select('avatar_url, full_name')
       .eq('id', session.user.id)
       .single();
-
     const el = document.getElementById('nav-avatar');
     if (data?.avatar_url) {
       el.innerHTML = `<img src="${data.avatar_url}" alt="avatar"/>`;
