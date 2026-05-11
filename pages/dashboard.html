@@ -9,29 +9,45 @@
     .dashboard-header {
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border);
-      padding: 1.5rem 0;
-      margin-bottom: 2rem;
+      padding: 1.25rem 0;
+      margin-bottom: 1.5rem;
     }
     .dashboard-header__inner {
       max-width: 1080px; margin: 0 auto; padding: 0 1.25rem;
       display: flex; align-items: center;
       justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     }
-    .dashboard-header h1 { font-size: 1.4rem; }
-    .dashboard-header p  { font-size: 0.85rem; color: var(--text-muted); }
+    .dashboard-header h1 { font-size: 1.3rem; }
+    .dashboard-header p  { font-size: 0.82rem; color: var(--text-muted); }
 
     .filters {
       display: flex; align-items: center;
       gap: 8px; flex-wrap: wrap;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .search-input {
+      flex: 1; min-width: 0;
+      padding: 8px 14px;
+      border: 1px solid var(--border-md);
+      border-radius: 20px; font-size: 0.85rem;
+      font-family: var(--font); outline: none;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      width: 100%;
+    }
+    .search-input:focus { border-color: var(--brand-400); }
+
+    .filter-btns {
+      display: flex; gap: 6px; flex-wrap: wrap;
     }
     .filter-btn {
       border: 1px solid var(--border-md);
       background: var(--bg-secondary);
       color: var(--text-secondary);
-      border-radius: 20px; padding: 6px 16px;
-      font-size: 0.82rem; cursor: pointer;
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 0.8rem; cursor: pointer;
       font-family: var(--font); transition: all 0.15s;
+      white-space: nowrap;
     }
     .filter-btn.active {
       background: var(--brand-400);
@@ -42,16 +58,6 @@
       background: var(--coral-400);
       border-color: var(--coral-400);
     }
-    .search-input {
-      flex: 1; min-width: 200px;
-      padding: 7px 14px;
-      border: 1px solid var(--border-md);
-      border-radius: 20px; font-size: 0.85rem;
-      font-family: var(--font); outline: none;
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-    }
-    .search-input:focus { border-color: var(--brand-400); }
 
     .listings-grid {
       display: grid;
@@ -132,6 +138,69 @@
       text-decoration: none; flex-shrink: 0;
     }
     .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── Mobile navbar ── */
+    @media (max-width: 600px) {
+      .navbar__inner { padding: 0 1rem; }
+      .navbar__logo-sub { display: none; }
+
+      /* Hide sign out text on mobile, show icon only */
+      #logout-btn { font-size: 0; width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+      #logout-btn::before { content: '👋'; font-size: 1rem; }
+
+      /* Hide admin text on mobile */
+      #admin-link { font-size: 0; width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+      #admin-link::before { content: '🛡️'; font-size: 1rem; }
+    }
+
+    /* ── Mobile grid — 1 column ── */
+    @media (max-width: 480px) {
+      .listings-grid {
+        grid-template-columns: 1fr;
+      }
+      .listing-card__img { height: 200px; }
+      .dashboard-header h1 { font-size: 1.1rem; }
+    }
+
+    /* ── Tablet grid — 2 columns ── */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .listings-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* ── Mobile search full width ── */
+    @media (max-width: 600px) {
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-input { width: 100%; }
+      .filter-btns { justify-content: center; }
+    }
+
+    /* ── Mobile post button ── */
+    .fab {
+      display: none;
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--brand-400);
+      color: #fff; font-size: 1.5rem;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(75,0,130,0.4);
+      align-items: center; justify-content: center;
+      text-decoration: none;
+      z-index: 40;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .fab:hover { background: var(--brand-600); transform: scale(1.05); }
+
+    @media (max-width: 600px) {
+      .fab { display: flex; }
+      .btn--post-mobile { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -154,7 +223,7 @@
       <span class="navbar__logo-sub hide-mobile">Digital Noticeboard</span>
     </a>
     <div class="navbar__links">
-      <a href="post-item.html" class="btn btn--primary btn--sm">+ Post item</a>
+      <a href="post-item.html" class="btn btn--primary btn--sm btn--post-mobile">+ Post item</a>
       <a href="inbox.html" class="notif-btn" id="inbox-btn" title="Messages">
         💬
         <span class="notif-badge" id="notif-badge"></span>
@@ -174,14 +243,14 @@
       <h1>Community listings</h1>
       <p>Browse lost and found items in your area</p>
     </div>
-    <div style="display:flex; gap:10px;">
+    <div style="display:flex; gap:16px;">
       <div style="text-align:center;">
         <div style="font-size:1.3rem;font-weight:600;color:var(--coral-400);" id="count-lost">—</div>
-        <div style="font-size:0.75rem;color:var(--text-muted);">Lost</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);">Lost</div>
       </div>
       <div style="text-align:center;">
         <div style="font-size:1.3rem;font-weight:600;color:var(--brand-400);" id="count-found">—</div>
-        <div style="font-size:0.75rem;color:var(--text-muted);">Found</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);">Found</div>
       </div>
     </div>
   </div>
@@ -192,16 +261,21 @@
 
   <!-- Filters -->
   <div class="filters">
-    <input class="search-input" type="text" placeholder="Search items or location..." id="search"/>
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn lost"   data-filter="lost">Lost</button>
-    <button class="filter-btn"        data-filter="found">Found</button>
+    <input class="search-input" type="text" placeholder="🔍  Search items or location..." id="search"/>
+    <div class="filter-btns">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn lost"   data-filter="lost">Lost</button>
+      <button class="filter-btn"        data-filter="found">Found</button>
+    </div>
   </div>
 
   <!-- Grid -->
   <div class="listings-grid" id="listings-grid"></div>
 
 </div>
+
+<!-- Mobile FAB post button -->
+<a href="post-item.html" class="fab" title="Post item">+</a>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase.js"></script>
@@ -215,7 +289,6 @@
   let allItems  = [];
   let curFilter = 'all';
 
-  // ── Load nav avatar ──
   async function loadNavAvatar() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
@@ -232,7 +305,6 @@
     }
   }
 
-  // ── Check unread messages ──
   async function checkUnread() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
@@ -248,7 +320,6 @@
     }
   }
 
-  // ── Check if user is admin ──
   async function checkAdminLink() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
@@ -262,7 +333,6 @@
     }
   }
 
-  // ── Show skeleton loaders ──
   function showSkeletons() {
     grid.innerHTML = Array(6).fill(`
       <div class="skeleton-card">
@@ -275,7 +345,6 @@
       </div>`).join('');
   }
 
-  // ── Load listings from Supabase ──
   async function loadListings() {
     showSkeletons();
     const { data, error } = await sb
@@ -291,13 +360,11 @@
     renderListings();
   }
 
-  // ── Count lost vs found ──
   function updateCounts() {
     document.getElementById('count-lost').textContent  = allItems.filter(i => i.type === 'lost').length;
     document.getElementById('count-found').textContent = allItems.filter(i => i.type === 'found').length;
   }
 
-  // ── Render cards ──
   function renderListings() {
     const q = search.value.toLowerCase();
     const filtered = allItems.filter(item => {
@@ -331,12 +398,10 @@
         <div class="listing-card__body">
           <div class="listing-card__top">
             <span class="badge badge--${item.type}">${item.type === 'lost' ? 'Lost' : 'Found'}</span>
-            <span style="font-size:0.75rem;color:var(--text-muted);">${timeAgo(item.created_at)}</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);">${timeAgo(item.created_at)}</span>
           </div>
           <div class="listing-card__title">${item.title}</div>
-          <div class="listing-card__loc">
-            📍 ${item.location}
-          </div>
+          <div class="listing-card__loc">📍 ${item.location}</div>
           <div class="listing-card__footer">
             <div class="listing-card__user">
               <div class="avatar avatar--sm">${initials(item.profiles?.full_name || 'U')}</div>
@@ -351,7 +416,6 @@
     `).join('');
   }
 
-  // ── Filter buttons ──
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -361,16 +425,13 @@
     });
   });
 
-  // ── Search ──
   search.addEventListener('input', renderListings);
 
-  // ── Logout ──
   document.getElementById('logout-btn').addEventListener('click', async () => {
     await sb.auth.signOut();
     window.location.href = '../index.html';
   });
 
-  // ── Init ──
   checkAdminLink();
   checkUnread();
   loadNavAvatar();
