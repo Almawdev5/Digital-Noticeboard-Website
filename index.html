@@ -84,6 +84,173 @@
       background: radial-gradient(ellipse, rgba(75,0,130,0.08) 0%, transparent 70%);
       pointer-events: none; z-index: 0;
     }
+
+    /* ── How it works ── */
+    .how-section {
+      max-width: 1080px; margin: 0 auto;
+      padding: 0 1.25rem 5rem;
+    }
+    .how-section__title {
+      text-align: center; margin-bottom: 2.5rem;
+    }
+    .how-section__title h2 { font-size: 1.6rem; margin-bottom: 6px; }
+    .how-section__title p  { color: var(--text-muted); font-size: 0.9rem; }
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; position: relative;
+    }
+    .how-step {
+      text-align: center; padding: 1.5rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .how-step__num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--brand-400); color: #fff;
+      font-size: 0.9rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 0.75rem;
+    }
+    .how-step h3 { font-size: 0.9rem; margin-bottom: 6px; }
+    .how-step p  { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── CTA Banner ── */
+    .cta-banner {
+      margin: 0 1.25rem 5rem;
+      max-width: 1080px; margin-left: auto; margin-right: auto;
+      background: var(--brand-400);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,215,0,0.1);
+    }
+    .cta-banner::after {
+      content: '';
+      position: absolute; bottom: -40px; left: -40px;
+      width: 150px; height: 150px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .cta-banner h2 {
+      color: #fff; font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+    .cta-banner p {
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 1.5rem; font-size: 0.95rem;
+    }
+    .cta-banner .btn--gold {
+      background: var(--gold-400);
+      color: var(--brand-400);
+      font-weight: 700; padding: 10px 28px;
+    }
+    .cta-banner .btn--gold:hover { background: #ffe033; }
+
+    /* ── Footer ── */
+    .footer {
+      background: #0d0014;
+      color: rgba(255,255,255,0.7);
+      padding: 3rem 1.25rem 1.5rem;
+      margin-top: 0;
+    }
+    .footer__inner {
+      max-width: 1080px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2rem; margin-bottom: 2.5rem;
+    }
+    .footer__brand { }
+    .footer__logo {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1rem; text-decoration: none;
+    }
+    .footer__logo-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--brand-400);
+      border-radius: 22px; padding: 5px 14px 5px 8px;
+    }
+    .footer__logo-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--gold-400);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer__logo-text {
+      font-size: 0.85rem; font-weight: 700; color: white;
+    }
+    .footer__logo-text span { color: var(--gold-400); }
+    .footer__tagline {
+      font-size: 0.82rem; color: rgba(255,255,255,0.5);
+      line-height: 1.6; margin-bottom: 1.25rem;
+      max-width: 240px;
+    }
+    .footer__social {
+      display: flex; gap: 8px;
+    }
+    .footer__social-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; text-decoration: none;
+      transition: background 0.15s;
+    }
+    .footer__social-btn:hover { background: rgba(255,215,0,0.15); }
+
+    .footer__col h4 {
+      font-size: 0.78rem; font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .footer__col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer__col ul li a {
+      font-size: 0.85rem; color: rgba(255,255,255,0.6);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .footer__col ul li a:hover { color: var(--gold-400); }
+
+    .footer__bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.25rem;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      max-width: 1080px; margin: 0 auto;
+    }
+    .footer__bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+    .footer__bottom-links { display: flex; gap: 1.25rem; }
+    .footer__bottom-links a {
+      font-size: 0.78rem; color: rgba(255,255,255,0.35);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .footer__bottom-links a:hover { color: var(--gold-400); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .footer__inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+      .footer__brand { grid-column: 1 / -1; }
+      .cta-banner { padding: 2rem 1.25rem; }
+      .cta-banner h2 { font-size: 1.3rem; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.6rem; }
+      .footer__inner { grid-template-columns: 1fr; }
+      .stats-bar { flex-direction: column; }
+      .stats-bar__item { border-right: none; border-bottom: 1px solid var(--border); }
+      .stats-bar__item:last-child { border-bottom: none; }
+    }
   </style>
 </head>
 <body>
@@ -166,6 +333,116 @@
     <p>Admin tools keep fraudulent listings off the platform.</p>
   </div>
 </div>
+
+<!-- How it works -->
+<div class="how-section">
+  <div class="how-section__title">
+    <h2>How ReFind works</h2>
+    <p>Three simple steps to recover or return a lost item</p>
+  </div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step__num">1</div>
+      <h3>Post your listing</h3>
+      <p>Describe the item, upload a photo and mark the last seen location in seconds.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step__num">2</div>
+      <h3>Community spots it</h3>
+      <p>Verified community members browse listings and message you securely if they have information.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step__num">3</div>
+      <h3>Reunited!</h3>
+      <p>Coordinate a safe handover through in-app chat. Mark the item as returned and celebrate! 🎉</p>
+    </div>
+  </div>
+</div>
+
+<!-- CTA Banner -->
+<div class="container" style="padding: 0 1.25rem 5rem;">
+  <div class="cta-banner">
+    <h2>Lost something? Don't give up.</h2>
+    <p>Thousands of items are reunited every month through community effort. Yours could be next.</p>
+    <a href="pages/signup.html" class="btn btn--gold">Join ReFind for free</a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer__inner">
+
+    <!-- Brand col -->
+    <div class="footer__brand">
+      <a href="index.html" class="footer__logo">
+        <div class="footer__logo-pill">
+          <div class="footer__logo-icon">
+            <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
+              <circle cx="8" cy="7" r="4" fill="none" stroke="#4B0082" stroke-width="2"/>
+              <line x1="11.5" y1="11" x2="15" y2="15" stroke="#4B0082" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="footer__logo-text"><span>Re</span>Find</span>
+        </div>
+      </a>
+      <p class="footer__tagline">
+        A community-powered digital noticeboard helping people recover lost items and return found ones — built on trust, verified identities and secure communication.
+      </p>
+      <div class="footer__social">
+        <a href="#" class="footer__social-btn" title="Telegram">✈️</a>
+        <a href="#" class="footer__social-btn" title="Twitter">🐦</a>
+        <a href="#" class="footer__social-btn" title="Facebook">📘</a>
+        <a href="#" class="footer__social-btn" title="Instagram">📸</a>
+      </div>
+    </div>
+
+    <!-- Platform col -->
+    <div class="footer__col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="pages/dashboard.html">Browse listings</a></li>
+        <li><a href="pages/post-item.html">Post an item</a></li>
+        <li><a href="pages/signup.html">Create account</a></li>
+        <li><a href="pages/login.html">Sign in</a></li>
+      </ul>
+    </div>
+
+    <!-- Categories col -->
+    <div class="footer__col">
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="pages/dashboard.html">📱 Electronics</a></li>
+        <li><a href="pages/dashboard.html">🪪 ID & Documents</a></li>
+        <li><a href="pages/dashboard.html">🔑 Keys</a></li>
+        <li><a href="pages/dashboard.html">🐕 Pets</a></li>
+        <li><a href="pages/dashboard.html">👜 Accessories</a></li>
+      </ul>
+    </div>
+
+    <!-- Info col -->
+    <div class="footer__col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#">About ReFind</a></li>
+        <li><a href="#">How it works</a></li>
+        <li><a href="#">Community guidelines</a></li>
+        <li><a href="#">Privacy policy</a></li>
+        <li><a href="#">Contact us</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="footer__bottom">
+    <p>© 2026 ReFind Digital Noticeboard. Built By Alexis for the community.</p>
+    <div class="footer__bottom-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Support</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
