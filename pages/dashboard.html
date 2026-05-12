@@ -143,7 +143,6 @@
       color: rgba(255,255,255,0.5);
       margin-top: 3rem;
       padding: 1.5rem 1.25rem;
-      text-align: center;
     }
     .dash-footer__inner {
       max-width: 1080px; margin: 0 auto;
@@ -165,9 +164,7 @@
       background: var(--gold-400);
       display: flex; align-items: center; justify-content: center;
     }
-    .dash-footer__logo-text {
-      font-size: 0.8rem; font-weight: 700; color: white;
-    }
+    .dash-footer__logo-text { font-size: 0.8rem; font-weight: 700; color: white; }
     .dash-footer__logo-text span { color: var(--gold-400); }
     .dash-footer__links {
       display: flex; gap: 1.25rem; flex-wrap: wrap;
@@ -178,52 +175,52 @@
       text-decoration: none; transition: color 0.15s;
     }
     .dash-footer__links a:hover { color: var(--gold-400); }
-    .dash-footer__copy {
-      font-size: 0.75rem; color: rgba(255,255,255,0.25);
+    .dash-footer__copy { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+
+    /* ── FAB — always visible, hidden on desktop ── */
+    .fab {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--brand-400);
+      color: #fff; font-size: 1.8rem;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(75,0,130,0.5);
+      display: flex;
+      align-items: center; justify-content: center;
+      text-decoration: none; z-index: 999;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .fab:hover { background: var(--brand-600); transform: scale(1.08); }
+
+    /* ── Responsive ── */
+    @media (min-width: 601px) {
+      .fab { display: none !important; }
     }
 
-    /* ── Mobile ── */
     @media (max-width: 600px) {
       .navbar__inner { padding: 0 1rem; }
       .navbar__logo-sub { display: none; }
       #logout-btn { font-size: 0; width: 36px; height: 36px; padding: 0; border-radius: 50%; }
       #logout-btn::before { content: '👋'; font-size: 1rem; }
-      #admin-link { font-size: 0; width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+      #admin-link { font-size: 0 !important; width: 36px !important; height: 36px !important; padding: 0 !important; border-radius: 50% !important; }
       #admin-link::before { content: '🛡️'; font-size: 1rem; }
       .dash-footer__inner { flex-direction: column; align-items: center; text-align: center; }
+      .filters { flex-direction: column; align-items: stretch; }
+      .search-input { width: 100%; }
+      .filter-btns { justify-content: center; }
+      .btn--post-mobile { display: none !important; }
     }
+
     @media (max-width: 480px) {
       .listings-grid { grid-template-columns: 1fr; }
       .listing-card__img { height: 200px; }
       .dashboard-header h1 { font-size: 1.1rem; }
     }
+
     @media (min-width: 481px) and (max-width: 768px) {
       .listings-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .filters { flex-direction: column; align-items: stretch; }
-      .search-input { width: 100%; }
-      .filter-btns { justify-content: center; }
-    }
-
-    .fab {
-      display: none;
-      position: fixed;
-      bottom: 1.5rem; right: 1.5rem;
-      width: 52px; height: 52px;
-      border-radius: 50%;
-      background: var(--brand-400);
-      color: #fff; font-size: 1.5rem;
-      border: none; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(75,0,130,0.4);
-      align-items: center; justify-content: center;
-      text-decoration: none; z-index: 40;
-      transition: background 0.15s, transform 0.15s;
-    }
-    .fab:hover { background: var(--brand-600); transform: scale(1.05); }
-    @media (max-width: 600px) {
-      .fab { display: flex; }
-      .btn--post-mobile { display: none; }
     }
   </style>
 </head>
@@ -247,7 +244,7 @@
       <span class="navbar__logo-sub hide-mobile">Digital Noticeboard</span>
     </a>
     <div class="navbar__links">
-      <a href="post-item.html" class="btn btn--primary btn--sm btn--post-mobile">+ Post item</a>
+      <a href="post-item.html" class="btn btn--primary btn--sm btn--post-mobile">+ Post</a>
       <a href="inbox.html" class="notif-btn" id="inbox-btn" title="Messages">
         💬
         <span class="notif-badge" id="notif-badge"></span>
@@ -282,8 +279,6 @@
 
 <!-- Main Content -->
 <div class="container page">
-
-  <!-- Filters -->
   <div class="filters">
     <input class="search-input" type="text" placeholder="🔍  Search items or location..." id="search"/>
     <div class="filter-btns">
@@ -292,16 +287,12 @@
       <button class="filter-btn"        data-filter="found">Found</button>
     </div>
   </div>
-
-  <!-- Grid -->
   <div class="listings-grid" id="listings-grid"></div>
-
 </div>
 
 <!-- Footer -->
 <footer class="dash-footer">
   <div class="dash-footer__inner">
-
     <a href="../index.html" class="dash-footer__logo">
       <div class="dash-footer__logo-pill">
         <div class="dash-footer__logo-icon">
@@ -313,20 +304,17 @@
         <span class="dash-footer__logo-text"><span>Re</span>Find</span>
       </div>
     </a>
-
     <div class="dash-footer__links">
       <a href="post-item.html">Post an item</a>
       <a href="inbox.html">Inbox</a>
       <a href="profile.html">Profile</a>
       <a href="../index.html">About</a>
     </div>
-
-    <p class="dash-footer__copy">© 2026 ReFind · By Alexis for the community </p>
-
+    <p class="dash-footer__copy">© 2026 ReFind · By Alexis for the community</p>
   </div>
 </footer>
 
-<!-- Mobile FAB -->
+<!-- FAB for mobile -->
 <a href="post-item.html" class="fab" title="Post item">+</a>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -404,9 +392,7 @@
       .select('*, profiles(full_name, verified)')
       .eq('status', 'active')
       .order('created_at', { ascending: false });
-
     if (error) { showToast('Failed to load listings', 'error'); return; }
-
     allItems = data || [];
     updateCounts();
     renderListings();
