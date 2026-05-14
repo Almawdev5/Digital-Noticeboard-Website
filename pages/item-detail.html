@@ -146,9 +146,12 @@
         <div class="owner-card__sub" id="owner-verified">Community member</div>
       </div>
     </div>
-    <button class="btn btn--primary" id="message-btn">
-      💬 Message
-    </button>
+   <button class="btn btn--primary" id="message-btn">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  Message
+</button>
   </div>
 
   <!-- Report -->
@@ -211,21 +214,59 @@
     document.getElementById('owner-verified').textContent = owner?.verified
       ? '✅ Verified member' : 'Community member';
 
-    document.getElementById('message-btn').addEventListener('click', () => {
-      window.location.href = `chat.html?listing=${id}&user=${owner?.id}`;
-    });
+   const { data: { session } } = await sb.auth.getSession();
+const messageBtn = document.getElementById('message-btn');
+
+if (session.user.id === owner?.id) {
+  messageBtn.outerHTML = `
+    <div style="
+      display:flex; align-items:center; gap:8px;
+      background:var(--bg-tertiary);
+      border:1px solid var(--border-md);
+      border-radius:var(--radius-sm);
+      padding:9px 14px; font-size:0.85rem;
+      color:var(--text-muted);
+    ">
+      📋 Your listing
+      <a href="inbox.html" style="
+        color:var(--brand-400);
+        font-weight:500;
+        text-decoration:none;
+        font-size:0.82rem;
+      ">Check inbox →</a>
+    </div>`;
+} else {
+  messageBtn.addEventListener('click', () => {
+    window.location.href = `chat.html?listing=${id}&user=${owner?.id}`;
+  });
+}
   }
 
-  document.getElementById('report-btn').addEventListener('click', async () => {
-    const { data: { session } } = await sb.auth.getSession();
-    const { error } = await sb.from('reports').insert({
-      listing_id:  id,
-      reporter_id: session.user.id,
-      reason:      'Reported by user'
-    });
-    if (error) { showToast('Could not report listing', 'error'); return; }
-    showToast('Listing reported to admins', 'success');
+ document.getElementById('report-btn').addEventListener('click', async () => {
+  const reason = prompt('Why are you reporting this listing?\n\n1. Scam or fraud\n2. Wrong information\n3. Inappropriate content\n4. Already resolved\n5. Other\n\nType your reason:');
+
+  if (!reason) return;
+
+  const { data: { session } } = await sb.auth.getSession();
+
+  const { error } = await sb.from('reports').insert({
+    listing_id:  id,
+    reporter_id: session.user.id,
+    reason:      reason
   });
+
+  if (error) {
+    showToast('Could not report listing', 'error');
+    return;
+  }
+
+  const reportBtn = document.getElementById('report-btn');
+  reportBtn.textContent = '✅ Reported';
+  reportBtn.disabled = true;
+  reportBtn.style.color = 'var(--text-muted)';
+
+  showToast('Listing reported to admins. Thank you!', 'success');
+});
 
   loadListing();
 </script>
