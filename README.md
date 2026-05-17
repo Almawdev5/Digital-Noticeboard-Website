@@ -2,7 +2,7 @@
 
 A clean, responsive web app for posting and browsing lost and found items. ReFind is built as a static front-end that connects to Supabase for authentication, item storage, user profiles, chat, and basic admin controls.
 
-## 🚀 Project Overview
+## Project Overview
 
 ReFind is a community-driven noticeboard where users can:
 - create accounts and sign in
@@ -14,7 +14,7 @@ ReFind is a community-driven noticeboard where users can:
 - chat directly about an item
 - access an admin panel for moderation (requires admin flag)
 
-## 📁 Project Structure
+## Project Structure
 
 - `index.html` — marketing/home landing page
 - `css/` — styling files for app layout and components
@@ -34,7 +34,7 @@ ReFind is a community-driven noticeboard where users can:
   - `admin.html` — admin panel for listings, users, and reports
   - `inbox.html` — inbox-style message center (existing page)
 
-## ✨ Key Features
+## Key Features
 
 ### Authentication
 - Email/password sign up and sign in with Supabase
@@ -91,13 +91,13 @@ http://localhost:8000/index.html
 ### Configure Supabase
 The app uses `js/supabase.js` for the Supabase connection. Replace the existing `SUPABASE_URL` and `SUPABASE_ANON_KEY` values with your own Supabase project credentials if needed.
 
-## ✅ Notes
+## Notes
 - The app is currently implemented as static pages with inline page logic in the HTML files.
 - `js/utils.js` contains shared utilities used across pages.
 - `auth.js` and `listings.js` are currently empty and can be repurposed for future shared authentication or listing helpers.
 - The Supabase anon key is present in the repo, so if you intend to deploy this publicly, replace it with your own key and secure your project rules.
 
-## 📌 Usage Flow
+## Usage Flow
 1. Open `index.html` and navigate to signup or login.
 2. Authenticate to access the dashboard.
 3. Browse listings or click `Post item` to create a new lost/found listing.
@@ -105,7 +105,7 @@ The app uses `js/supabase.js` for the Supabase connection. Replace the existing 
 5. Visit `profile.html` to manage your account and review your posts.
 6. Admin users can open `admin.html` for moderation controls.
 
-## 💡 Future Improvements
+## Future Improvements
 - Move inline page scripts into dedicated JS modules
 - Add a build toolchain or bundler for cleaner asset management
 - Add client-side validation reuse through shared components
